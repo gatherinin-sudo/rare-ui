@@ -49,6 +49,35 @@ Rare UI is a shadcn registry built with Next.js, Tailwind CSS, and TypeScript. E
 </tr>
 </table>
 
+### Platform Sponsors
+
+<div align="center"><sub>Products that back Rare UI through their open-source programs.</sub></div>
+
+<table align="center">
+<tr>
+<td align="center" width="340">
+  <a href="https://www.databuddy.cc/?utm_source=rareui&utm_medium=referral&utm_campaign=readme">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="public/logos/databuddywhite.svg" />
+      <img src="public/logos/databuddydark.svg" alt="Databuddy" width="180" />
+    </picture>
+  </a>
+  <br />
+  <sub>Analytics Sponsor</sub>
+</td>
+<td align="center" width="340">
+  <a href="https://vercel.com/?utm_source=rareui&utm_medium=referral&utm_campaign=readme">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="public/logos/vercelwhite.svg" />
+      <img src="public/logos/verceldark.svg" alt="Vercel" width="150" />
+    </picture>
+  </a>
+  <br />
+  <sub>Hosting Sponsor</sub>
+</td>
+</tr>
+</table>
+
 Rare UI is free. Sponsorship keeps it that way. See the tiers at [rareui.com/sponsors](https://rareui.com/sponsors).
 
 ## Quick start
