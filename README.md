@@ -2,6 +2,11 @@
   <a href="https://rareui.com">
     <img src="public/assets/repoassets/repoimg.png" alt="Rare UI" width="100%" />
   </a>
+  <br />
+  <br />
+  <a href="https://vercel.com/open-source-program">
+    <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge-2026.svg" />
+  </a>
 </div>
 
 <div align="center">
@@ -64,16 +69,6 @@ Rare UI is a shadcn registry built with Next.js, Tailwind CSS, and TypeScript. E
   </a>
   <br />
   <sub>Analytics Sponsor</sub>
-</td>
-<td align="center" width="340">
-  <a href="https://vercel.com/?utm_source=rareui&utm_medium=referral&utm_campaign=readme">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="public/logos/vercelwhite.svg" />
-      <img src="public/logos/verceldark.svg" alt="Vercel" width="150" />
-    </picture>
-  </a>
-  <br />
-  <sub>Hosting Sponsor</sub>
 </td>
 </tr>
 </table>
