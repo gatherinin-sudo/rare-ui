@@ -44,7 +44,7 @@ export const TIERS: SponsorTier[] = [
   {
     id: "diamond",
     name: "Diamond",
-    price: 250,
+    price: 500,
     featured: true,
     checkoutUrl: checkoutUrl("pdt_0NmWwRrCkr52Q8lUgnRmv", "diamond"),
     perks: [
@@ -58,7 +58,7 @@ export const TIERS: SponsorTier[] = [
   {
     id: "gold",
     name: "Gold",
-    price: 150,
+    price: 250,
     checkoutUrl: checkoutUrl("pdt_0NmX0YaB0scByQK477GpK", "gold"),
     perks: [
       "Larger logo on the sponsors page",
@@ -70,7 +70,7 @@ export const TIERS: SponsorTier[] = [
   {
     id: "silver",
     name: "Silver",
-    price: 100,
+    price: 150,
     checkoutUrl: checkoutUrl("pdt_0NmX0j1cBjnmqah0xjy0l", "silver"),
     perks: ["Logo in the README", "Listed on the sponsors page"],
   },
