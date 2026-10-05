@@ -11,12 +11,16 @@ import {
 
 import { cn } from "@/lib/utils"
 
-export type FlightPathItem = { id: string; label: string; depth?: number }
+export type RailTocItem = { id: string; label: string; depth?: number }
 
 const RAIL_X = 5
 const LABEL_GAP = 14
 const TRAVEL_SPRING = { stiffness: 140, damping: 26, mass: 0.6 }
 const TURN_SPRING = { stiffness: 260, damping: 30 }
+
+const PLANE = "M12 2 20.5 21 12 17.5 3.5 21z"
+// the plane is narrower than a dot, so the rail and dots under it are cut away
+const PLANE_HOLE = 4
 
 const useIsoLayoutEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect
@@ -50,15 +54,15 @@ function lengthAtY(path: SVGPathElement, total: number, y: number) {
   return hi
 }
 
-export type FlightPathProps = React.ComponentProps<"nav"> & {
-  items: FlightPathItem[]
+export type RailTocProps = React.ComponentProps<"nav"> & {
+  items: RailTocItem[]
   containerRef?: React.RefObject<HTMLElement | null>
   offset?: number
   indent?: number
   title?: string
 }
 
-const FlightPath = ({
+const RailToc = ({
   className,
   items,
   containerRef,
@@ -66,13 +70,14 @@ const FlightPath = ({
   indent = 14,
   title = "On this page",
   ...props
-}: FlightPathProps) => {
+}: RailTocProps) => {
   const reduceMotion = useReducedMotion()
-  const maskId = `flight-path-${React.useId().replace(/[^\w-]/g, "")}`
+  const maskId = `rail-toc-${React.useId().replace(/[^\w-]/g, "")}`
 
   const listRef = React.useRef<HTMLUListElement>(null)
   const rowRefs = React.useRef<(HTMLLIElement | null)[]>([])
   const pathRef = React.useRef<SVGPathElement>(null)
+  const holeRefs = React.useRef<(SVGCircleElement | null)[]>([])
 
   const [geometry, setGeometry] = React.useState<Geometry>()
   const [reached, setReached] = React.useState(1)
@@ -80,6 +85,8 @@ const FlightPath = ({
   const lengths = React.useRef<number[]>([])
   const total = React.useRef(0)
   const placed = React.useRef(false)
+  const pinned = React.useRef<number | null>(null)
+  const userScrolled = React.useRef(false)
 
   const target = useMotionValue(0)
   const travel = useSpring(target, TRAVEL_SPRING)
@@ -100,6 +107,10 @@ const FlightPath = ({
       const behind = path.getPointAtLength(Math.max(0, l - 1))
       const ahead = path.getPointAtLength(Math.min(length, l + 1))
       x.set(at.x)
+      holeRefs.current.forEach((hole) => {
+        hole?.setAttribute("cx", `${at.x}`)
+        hole?.setAttribute("cy", `${at.y}`)
+      })
       y.set(at.y)
       heading.set(
         (Math.atan2(ahead.y - behind.y, ahead.x - behind.x) * 180) / Math.PI +
@@ -117,6 +128,12 @@ const FlightPath = ({
     const nodes = lengths.current
     if (!nodes.length) return
 
+    // a clicked heading holds the plane until the reader scrolls, since headings near the end can't scroll up to the anchor
+    if (pinned.current !== null) {
+      target.set(nodes[pinned.current] ?? nodes[0])
+      return
+    }
+
     const scroller = containerRef?.current
     const scrollTop = scroller ? scroller.scrollTop : window.scrollY
     const viewHeight = scroller ? scroller.clientHeight : window.innerHeight
@@ -125,9 +142,10 @@ const FlightPath = ({
       : document.documentElement.scrollHeight
     const originTop = scroller ? scroller.getBoundingClientRect().top : 0
 
-    // the anchor sweeps down the viewport near the end so the last heading is always reachable
+    // the anchor starts at the top edge and sweeps to the bottom near the end, so the first and last headings are both reachable
     const remaining = Math.max(0, scrollHeight - viewHeight - scrollTop)
-    const anchor = offset + Math.max(0, viewHeight - offset - remaining)
+    const line = Math.min(offset, scrollTop)
+    const anchor = line + Math.max(0, viewHeight - line - remaining)
 
     const tops = items.map((item) => {
       const el = document.getElementById(item.id)
@@ -195,17 +213,35 @@ const FlightPath = ({
 
   React.useEffect(() => {
     const scroller = containerRef?.current ?? window
-    scroller.addEventListener("scroll", sync, { passive: true })
+    const onIntent = () => {
+      userScrolled.current = true
+    }
+    const onScroll = () => {
+      if (pinned.current !== null && userScrolled.current) pinned.current = null
+      sync()
+    }
+    scroller.addEventListener("scroll", onScroll, { passive: true })
+    scroller.addEventListener("wheel", onIntent, { passive: true })
+    scroller.addEventListener("touchstart", onIntent, { passive: true })
+    scroller.addEventListener("pointerdown", onIntent)
+    window.addEventListener("keydown", onIntent)
     window.addEventListener("resize", sync)
     return () => {
-      scroller.removeEventListener("scroll", sync)
+      scroller.removeEventListener("scroll", onScroll)
+      scroller.removeEventListener("wheel", onIntent)
+      scroller.removeEventListener("touchstart", onIntent)
+      scroller.removeEventListener("pointerdown", onIntent)
+      window.removeEventListener("keydown", onIntent)
       window.removeEventListener("resize", sync)
     }
   }, [containerRef, sync])
 
-  const select = (id: string) => {
-    const el = document.getElementById(id)
+  const select = (index: number) => {
+    const el = document.getElementById(items[index].id)
     if (!el) return
+    pinned.current = index
+    userScrolled.current = false
+    sync()
     const scroller = containerRef?.current
     const top = scroller
       ? el.getBoundingClientRect().top -
@@ -222,13 +258,13 @@ const FlightPath = ({
 
   return (
     <nav
-      data-slot="flight-path"
+      data-slot="rail-toc"
       aria-label={title}
       className={cn("w-max text-sm", railColor, className)}
       {...props}
     >
       <p
-        data-slot="flight-path-title"
+        data-slot="rail-toc-title"
         className="mb-3 flex items-center gap-2 font-medium text-foreground/70"
       >
         <svg
@@ -245,7 +281,7 @@ const FlightPath = ({
         {title}
       </p>
 
-      <ul ref={listRef} data-slot="flight-path-list" className="relative">
+      <ul ref={listRef} data-slot="rail-toc-list" className="relative">
         {geometry && (
           <svg
             className="pointer-events-none absolute left-0 top-0 overflow-visible"
@@ -282,6 +318,36 @@ const FlightPath = ({
               {geometry.nodes.map((node, i) => (
                 <circle key={i} cx={node.x} cy={node.y} r={4} fill="black" />
               ))}
+              <circle
+                ref={(el) => {
+                  holeRefs.current[0] = el
+                }}
+                r={PLANE_HOLE}
+                fill="black"
+              />
+            </mask>
+            <mask
+              id={`${maskId}-nodes`}
+              maskUnits="userSpaceOnUse"
+              x={-8}
+              y={-8}
+              width={geometry.width + 16}
+              height={geometry.height + 16}
+            >
+              <rect
+                x={-8}
+                y={-8}
+                width={geometry.width + 16}
+                height={geometry.height + 16}
+                fill="white"
+              />
+              <circle
+                ref={(el) => {
+                  holeRefs.current[1] = el
+                }}
+                r={PLANE_HOLE}
+                fill="black"
+              />
             </mask>
             <g mask={`url(#${maskId})`}>
               <path
@@ -289,7 +355,9 @@ const FlightPath = ({
                 d={geometry.d}
                 fill="none"
                 strokeWidth="1.25"
-                strokeDasharray="3 4"
+                strokeDasharray="2 5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="stroke-foreground/25"
               />
               <motion.path
@@ -297,44 +365,46 @@ const FlightPath = ({
                 fill="none"
                 strokeWidth="1.25"
                 stroke="var(--rail)"
+                strokeLinejoin="round"
                 style={{ pathLength: filled }}
               />
             </g>
-            {geometry.nodes.map((node, i) => {
-              const covered = i < reached
-              return (
-                <circle
-                  key={items[i]?.id ?? i}
-                  cx={node.x}
-                  cy={node.y}
-                  r={covered ? 3 : 3.25}
-                  strokeWidth="1.25"
-                  className={cn(
-                    "transition-[fill,stroke] duration-200",
-                    covered
-                      ? "fill-[var(--rail)] stroke-[var(--rail)]"
-                      : "fill-transparent stroke-foreground/30",
-                  )}
-                />
-              )
-            })}
+            <g mask={`url(#${maskId}-nodes)`}>
+              {geometry.nodes.map((node, i) => {
+                const covered = i < reached
+                return (
+                  <circle
+                    key={items[i]?.id ?? i}
+                    cx={node.x}
+                    cy={node.y}
+                    r={covered ? 3 : 3.25}
+                    strokeWidth="1.25"
+                    className={cn(
+                      "transition-[fill,stroke] duration-200",
+                      covered
+                        ? "fill-[var(--rail)] stroke-[var(--rail)]"
+                        : "fill-transparent stroke-foreground/30",
+                    )}
+                  />
+                )
+              })}
+            </g>
           </svg>
         )}
 
         {geometry && (
           <motion.div
-            data-slot="flight-path-plane"
-            className="pointer-events-none absolute left-0 top-0 -ml-2 -mt-2 h-4 w-4 text-foreground"
+            data-slot="rail-toc-plane"
+            className="pointer-events-none absolute left-0 top-0 -ml-2 -mt-2 h-4 w-4 text-foreground [filter:drop-shadow(0_0_2px_rgb(0_0_0/0.35))]"
             style={{ x, y, rotate: reduceMotion ? heading : turn }}
             aria-hidden
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4 overflow-visible">
               <path
-                d="M12 2c.8 0 1.5.7 1.5 1.5V9l8 5v2l-8-2.5V19l2 1.5V22L12 21l-3.5 1v-1.5l2-1.5v-5.5l-8 2.5v-2l8-5V3.5C10.5 2.7 11.2 2 12 2z"
+                d={PLANE}
                 fill="currentColor"
-                stroke="var(--background)"
-                strokeWidth="2.5"
-                paintOrder="stroke"
+                stroke="currentColor"
+                strokeWidth="1.5"
                 strokeLinejoin="round"
               />
             </svg>
@@ -352,7 +422,7 @@ const FlightPath = ({
             >
               <button
                 type="button"
-                onClick={() => select(item.id)}
+                onClick={() => select(i)}
                 aria-current={isActive ? "location" : undefined}
                 className={cn(
                   "block w-full rounded-md py-1.5 pr-2 text-left leading-5 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20",
@@ -374,5 +444,5 @@ const FlightPath = ({
   )
 }
 
-export { FlightPath }
-export default FlightPath
+export { RailToc }
+export default RailToc

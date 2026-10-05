@@ -2,9 +2,9 @@
 
 import { useRef } from "react";
 
-import FlightPath, { type FlightPathItem } from "@/components/ui/flight-path";
+import RailToc, { type RailTocItem } from "@/components/ui/rail-toc";
 
-type Section = FlightPathItem & { body: string[] };
+type Section = RailTocItem & { body: string[] };
 
 const sections: Section[] = [
   {
@@ -76,13 +76,13 @@ const sections: Section[] = [
     label: "Features",
     depth: 0,
     body: [
-      "Click any item to scroll to its heading. The solid rail marks what you have read; the dashed rail marks what is left.",
-      "Reduced motion is respected: the plane moves without springs and scrolling jumps instead of gliding.",
+      "Click any item to scroll to its heading. The solid rail marks what you have read, the dashed rail what is left.",
+      "The paper plane marks where you are and turns to follow the rail as it bends.",
     ],
   },
 ];
 
-const items: FlightPathItem[] = sections.map(({ id, label, depth }) => ({
+const items: RailTocItem[] = sections.map(({ id, label, depth }) => ({
   id,
   label,
   depth,
@@ -94,7 +94,7 @@ export default function Demo() {
   return (
     <div className="flex h-full gap-10 overflow-hidden p-6">
       <aside className="w-52 shrink-0 pt-2">
-        <FlightPath items={items} containerRef={scrollRef} />
+        <RailToc items={items} containerRef={scrollRef} />
       </aside>
 
       <main

@@ -595,14 +595,14 @@ export function Demo() {
 // <ScrollProgress sections={sections} />`,
   },
   {
-    name: "Flight Path",
-    href: "/components/flightpath",
+    name: "Rail TOC",
+    href: "/components/railtoc",
     category: "navigation",
     isNew: true,
-    registry: "flight-path",
+    registry: "rail-toc",
     description:
-      "A table of contents whose rail bends with each heading's depth, solid behind a plane marker and dashed ahead of it.",
-    source: `${REGISTRY_HOMEPAGE}/blob/main/components/ui/flight-path.tsx`,
+      "A table of contents with a paper plane that flies to the section you're reading.",
+    source: `${REGISTRY_HOMEPAGE}/blob/main/components/ui/rail-toc.tsx`,
     dependencies: [
       {
         name: "motion",
@@ -610,7 +610,7 @@ export function Demo() {
       },
     ],
     interaction:
-      "Scroll the content and the plane follows the rail between headings, turning where the rail bends. The rail behind it turns solid and each heading it passes fills in; the rest stays dashed. Click any heading to scroll to it.",
+      "Scroll the content and the paper plane flies along the rail between headings, turning where the rail bends. The rail behind it is solid and each heading it passes fills in; the rest stays dashed. Click any heading to scroll to it.",
     props: [
       {
         name: "items",
@@ -649,15 +649,15 @@ export function Demo() {
         name: "className",
         type: "string",
         description:
-          "Extra classes merged onto the root nav. Inner parts carry data-slot attributes (flight-path-title, -list, -plane) for styling from CSS.",
+          "Extra classes merged onto the root nav. Inner parts carry data-slot attributes (rail-toc-title, -list, -plane) for styling from CSS.",
       },
     ],
     usage: `"use client"
 
 import { useRef } from "react"
-import FlightPath, { type FlightPathItem } from "@/components/ui/flight-path"
+import RailToc, { type RailTocItem } from "@/components/ui/rail-toc"
 
-const items: FlightPathItem[] = [
+const items: RailTocItem[] = [
   { id: "install", label: "Installation" },
   { id: "requirements", label: "Prerequisites", depth: 1 },
   { id: "usage", label: "Usage" },
@@ -674,14 +674,15 @@ export function Docs() {
         <h2 id="usage">Usage</h2>
       </article>
       <aside className="sticky top-4 h-max">
-        <FlightPath items={items} containerRef={scrollRef} />
+        <RailToc items={items} containerRef={scrollRef} />
       </aside>
     </main>
   )
 }
 
 // tracks the window with no container ref
-// <FlightPath items={items} />`,
+// <RailToc items={items} />`,
+    credits: ["Inspired by pinterest.com/pin/1118863101209303811"],
   },
   {
     name: "Code Block",
