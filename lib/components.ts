@@ -595,6 +595,95 @@ export function Demo() {
 // <ScrollProgress sections={sections} />`,
   },
   {
+    name: "Flight Path",
+    href: "/components/flightpath",
+    category: "navigation",
+    isNew: true,
+    registry: "flight-path",
+    description:
+      "A table of contents whose rail bends with each heading's depth, solid behind a plane marker and dashed ahead of it.",
+    source: `${REGISTRY_HOMEPAGE}/blob/main/components/ui/flight-path.tsx`,
+    dependencies: [
+      {
+        name: "motion",
+        icon: createElement(MotionIcon, { className: "h-4 w-4" }),
+      },
+    ],
+    interaction:
+      "Scroll the content and the plane follows the rail between headings, turning where the rail bends. The rail behind it turns solid and each heading it passes fills in; the rest stays dashed. Click any heading to scroll to it.",
+    props: [
+      {
+        name: "items",
+        type: "{ id: string; label: string; depth?: number }[]",
+        required: true,
+        description:
+          "Headings in document order. Each id must match an element id in the content. Depth sets the indent level and defaults to 0.",
+      },
+      {
+        name: "containerRef",
+        type: "React.RefObject<HTMLElement | null>",
+        description:
+          "Scroll container to track and scroll within. Defaults to the window when omitted.",
+      },
+      {
+        name: "offset",
+        type: "number",
+        default: "96",
+        description:
+          "Distance in pixels below the scroller's top edge where a heading counts as reached. Clicking an item scrolls its heading to this line.",
+      },
+      {
+        name: "indent",
+        type: "number",
+        default: "14",
+        description: "Horizontal step in pixels for each depth level.",
+      },
+      {
+        name: "title",
+        type: "string",
+        default: '"On this page"',
+        description:
+          "Text above the list. It also names the navigation for screen readers.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description:
+          "Extra classes merged onto the root nav. Inner parts carry data-slot attributes (flight-path-title, -list, -plane) for styling from CSS.",
+      },
+    ],
+    usage: `"use client"
+
+import { useRef } from "react"
+import FlightPath, { type FlightPathItem } from "@/components/ui/flight-path"
+
+const items: FlightPathItem[] = [
+  { id: "install", label: "Installation" },
+  { id: "requirements", label: "Prerequisites", depth: 1 },
+  { id: "usage", label: "Usage" },
+]
+
+export function Docs() {
+  const scrollRef = useRef<HTMLElement>(null)
+
+  return (
+    <main ref={scrollRef} className="flex h-full gap-12 overflow-auto">
+      <article>
+        <h2 id="install">Installation</h2>
+        <h3 id="requirements">Prerequisites</h3>
+        <h2 id="usage">Usage</h2>
+      </article>
+      <aside className="sticky top-4 h-max">
+        <FlightPath items={items} containerRef={scrollRef} />
+      </aside>
+    </main>
+  )
+}
+
+// tracks the window with no container ref
+// <FlightPath items={items} />`,
+  },
+  {
     name: "Code Block",
     href: "/components/codeblock",
     category: "display",

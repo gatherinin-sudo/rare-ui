@@ -134,6 +134,20 @@
       ]
     },
     {
+      "name": "flight-path",
+      "type": "registry:ui",
+      "title": "Flight Path",
+      "description": "A table of contents whose rail bends with each heading's depth, solid behind a plane marker and dashed ahead of it.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "components/ui/flight-path.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "code-block",
       "type": "registry:ui",
       "title": "Code Block",
