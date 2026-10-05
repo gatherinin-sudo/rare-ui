@@ -19,7 +19,7 @@ export const JURISDICTION = `the courts of ${BUSINESS_COUNTRY}`;
 
 export const DISPUTE_WINDOW = "30 days";
 
-export const LEGAL_UPDATED = "September 23, 2026";
+export const LEGAL_UPDATED = "October 4, 2026";
 
 export const MERCHANT_NAME = "Dodo Payments";
 

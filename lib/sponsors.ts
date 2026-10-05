@@ -17,6 +17,8 @@ export type SponsorBrand = {
   lightSrc: string;
   darkSrc: string;
   logoHeight: string;
+  // lockups differ in mass, so the inline strip needs its own height per brand
+  compactHeight?: string;
   logoClassName?: string;
   avatarSrc?: string;
 };
@@ -44,7 +46,7 @@ export const TIERS: SponsorTier[] = [
   {
     id: "diamond",
     name: "Diamond",
-    price: 250,
+    price: 500,
     featured: true,
     checkoutUrl: checkoutUrl("pdt_0NmWwRrCkr52Q8lUgnRmv", "diamond"),
     perks: [
@@ -58,7 +60,7 @@ export const TIERS: SponsorTier[] = [
   {
     id: "gold",
     name: "Gold",
-    price: 150,
+    price: 250,
     checkoutUrl: checkoutUrl("pdt_0NmX0YaB0scByQK477GpK", "gold"),
     perks: [
       "Larger logo on the sponsors page",
@@ -70,7 +72,7 @@ export const TIERS: SponsorTier[] = [
   {
     id: "silver",
     name: "Silver",
-    price: 100,
+    price: 150,
     checkoutUrl: checkoutUrl("pdt_0NmX0j1cBjnmqah0xjy0l", "silver"),
     perks: ["Logo in the README", "Listed on the sponsors page"],
   },
@@ -84,6 +86,7 @@ export const SPONSORS: Sponsor[] = [
     lightSrc: "/logos/runabledark.png",
     darkSrc: "/logos/runablewhite.png",
     logoHeight: "h-11 sm:h-16",
+    compactHeight: "h-3 sm:h-4.5",
     avatarSrc: "/logos/runableavatar.png",
   },
   {
@@ -93,9 +96,20 @@ export const SPONSORS: Sponsor[] = [
     lightSrc: "/logos/privatealpsdark.png",
     darkSrc: "/logos/privatealpswhite.png",
     logoHeight: "h-14 sm:h-20",
+    compactHeight: "h-3.5 sm:h-5",
     // the peak is sparse and the wordmark carries the mass, so bbox centering reads low
     logoClassName: "-translate-y-2 sm:-translate-y-2.5",
     avatarSrc: "/logos/privatealpslogo.png",
+  },
+  {
+    name: "Context.dev",
+    tier: "diamond",
+    href: "https://context.dev/?utm_source=rareui&utm_medium=referral&utm_campaign=sponsor",
+    lightSrc: "/logos/contextdark.svg",
+    darkSrc: "/logos/contextwhite.svg",
+    logoHeight: "h-7 sm:h-9",
+    compactHeight: "h-2.5 sm:h-3",
+    avatarSrc: "/logos/contextavatar.svg",
   },
 ];
 
