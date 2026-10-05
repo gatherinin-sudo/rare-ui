@@ -18,7 +18,7 @@ export default function HeroIntro({
   children,
 }: {
   headline: string;
-  sub: string;
+  sub: React.ReactNode;
   badge?: React.ReactNode;
   children: React.ReactNode;
 }) {

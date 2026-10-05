@@ -8,6 +8,8 @@ npx shadcn@latest add swamimalode07/rare-ui/<component-name>
 
 This guide walks through adding a new component, from the first file to a working install command.
 
+People can also install from Claude Code, Cursor, or Codex. The setup is at [rareui.com/mcp](https://rareui.com/mcp): add `@rare-ui` in their `components.json`, then `npx shadcn@latest mcp init`.
+
 ## Prerequisites
 
 - Node.js 18+

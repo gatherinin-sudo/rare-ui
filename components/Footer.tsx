@@ -21,6 +21,7 @@ type FooterLink = {
 const LINKS: FooterLink[] = [
   { label: "Home", href: "/" },
   { label: "Components", href: "/components" },
+  { label: "MCP", href: "/mcp" },
   { label: "Sponsors", href: "/sponsors" },
   { label: "Pricing", href: TIERS_HREF },
   { label: "GitHub", href: GITHUB_URL, external: true, icon: GithubLogo },
