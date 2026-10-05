@@ -101,6 +101,33 @@ npx shadcn@latest add swamimalode07/rare-ui/fluid-orb
 
 Browse every component, with live previews and props, at [rareui.com/components](https://rareui.com/components).
 
+## MCP (Claude Code, Cursor, Codex)
+
+In your project, add this to `components.json`:
+
+```json
+{
+  "registries": {
+    "@rare-ui": "https://raw.githubusercontent.com/swamimalode07/rare-ui/main/public/r/{name}.json"
+  }
+}
+```
+
+Then:
+
+```bash
+npx shadcn@latest mcp init --client claude
+# or: --client cursor | vscode
+```
+
+Ask: `add @rare-ui/fluid-orb`
+
+Or just: `Add the fluid orb from Rare UI`
+
+Not `add fluid-orb` on its own. That looks in the default shadcn registry.
+
+Full steps: [rareui.com/mcp](https://rareui.com/mcp).
+
 ## Running locally
 
 ```bash

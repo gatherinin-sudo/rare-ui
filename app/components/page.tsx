@@ -35,7 +35,14 @@ export default async function ComponentsIndexPage() {
           </h1>
           <p className="max-w-lg text-balance text-sm font-medium text-muted-foreground sm:text-base">
             Every component is a single file you own, not a dependency you
-            install. Add any of them with the shadcn CLI.{" "}
+            install. Add any of them with the shadcn CLI, or from{" "}
+            <a
+              href="/mcp"
+              className="text-foreground underline decoration-foreground/25 underline-offset-4"
+            >
+              MCP
+            </a>
+            .{" "}
             <span className="hidden [@media(hover:hover)]:inline">
               <span className="text-[#FC4C01]">[</span>
               Hover to play video
