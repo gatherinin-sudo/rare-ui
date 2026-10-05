@@ -49,6 +49,7 @@ export type ComponentItem = {
   registry?: string;
   source?: string;
   preview?: string;
+  previewScale?: number;
   featured?: boolean;
   dependencies?: Dependency[];
   interaction?: string;
@@ -603,6 +604,8 @@ export function Demo() {
     description:
       "A table of contents with a paper plane that flies to the section you're reading.",
     source: `${REGISTRY_HOMEPAGE}/blob/main/components/ui/rail-toc.tsx`,
+    preview: "/componentdemos/railtoc.mp4",
+    previewScale: 1.12,
     dependencies: [
       {
         name: "motion",

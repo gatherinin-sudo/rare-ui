@@ -60,6 +60,7 @@ export default function ComponentCard({
         {item.preview ? (
           <PreviewVideo
             src={item.preview}
+            scale={item.previewScale}
             playing={active}
             autoPlay={autoPlay}
           />
