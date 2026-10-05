@@ -134,6 +134,20 @@
       ]
     },
     {
+      "name": "rail-toc",
+      "type": "registry:ui",
+      "title": "Rail TOC",
+      "description": "A table of contents with a paper plane that flies to the section you're reading.",
+      "dependencies": ["motion"],
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "components/ui/rail-toc.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "code-block",
       "type": "registry:ui",
       "title": "Code Block",

@@ -7,10 +7,12 @@ export default function PreviewVideo({
   src,
   playing = false,
   autoPlay = false,
+  scale,
 }: {
   src: string;
   playing?: boolean;
   autoPlay?: boolean;
+  scale?: number;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduceMotion = useReducedMotion();
@@ -54,6 +56,7 @@ export default function PreviewVideo({
       preload="metadata"
       aria-hidden="true"
       className="h-full w-full object-cover"
+      style={scale ? { scale } : undefined}
     />
   );
 }
